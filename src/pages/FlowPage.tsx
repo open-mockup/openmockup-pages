@@ -342,7 +342,7 @@ export function FlowPage() {
                 {editorMode === "jsx" ? (
                   <Editor
                     height="100%"
-                    defaultLanguage="jsx"
+                    defaultLanguage="javascript"
                     value={jsxCode}
                     onChange={(value) => setJsxCode(value ?? "")}
                     theme={isDark ? "vs-dark" : "light"}
