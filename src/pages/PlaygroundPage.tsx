@@ -107,7 +107,11 @@ export function PlaygroundPage() {
 
   const parsedJsx = useMemo(() => {
     try {
-      const ir = parseJsx(jsxCode);
+      const raw = parseJsx(jsxCode);
+      // parseJsx wraps in a "page" root; renderDsl expects the layout node
+      const ir = raw.root.dslType === "page" && "children" in raw.root && raw.root.children.length > 0
+        ? { ...raw, root: raw.root.children[0]! }
+        : raw;
       return { ir, error: null };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Parse error";
