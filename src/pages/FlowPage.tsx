@@ -9,6 +9,7 @@ import {
   Group,
   Modal,
   Paper,
+  SegmentedControl,
   Stack,
   Text,
   Title,
@@ -19,10 +20,21 @@ import Editor from "@monaco-editor/react";
 import { IconAlertCircle } from "@tabler/icons-react";
 import * as dslApi from "@openmockup/dsl";
 import type { ActionRef } from "@openmockup/dsl";
-import { mantineRenderer } from "@openmockup/renderer-mantine";
+import { mantineRenderer, renderDsl } from "@openmockup/renderer-mantine";
 import { render } from "@openmockup/renderer-core";
+import { parseJsx } from "@openmockup/parser-jsx";
 import * as flowApi from "@openmockup/flow";
 import type { FlowDsl, FlowRuntimeState } from "@openmockup/flow";
+
+const initialJsxCode = `<Page title="User management">
+  <Section title="Team members">
+    <ActionBar>
+      <Button variant="primary" action="invite-user">Invite user</Button>
+      <Button variant="secondary" action="export-csv">Export CSV</Button>
+    </ActionBar>
+    <Table dataSource="teamMembers" columns={["Name", "Email", "Role", "Status"]} />
+  </Section>
+</Page>`;
 
 const initialFlowCode = `flow({
   initial: flowFormRef("inventory"),
@@ -196,35 +208,44 @@ export function FlowPage() {
   const isNarrow = useMediaQuery("(max-width: 62em)");
   const completionRegistered = useRef(false);
   const [showCodePanel, setShowCodePanel] = useState(true);
-  const [code, setCode] = useState(initialFlowCode);
+  const [editorMode, setEditorMode] = useState<"jsx" | "ts">("jsx");
+  const [jsxCode, setJsxCode] = useState(initialJsxCode);
+  const [tsCode, setTsCode] = useState(initialFlowCode);
 
-  const parsed = useMemo(() => {
+  const parsedJsx = useMemo(() => {
     try {
-      const result = evaluateFlowTs(code);
+      const ir = parseJsx(jsxCode);
+      return { ir, error: null };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Parse error";
+      return { ir: null, error: message };
+    }
+  }, [jsxCode]);
+
+  const parsedTs = useMemo(() => {
+    try {
+      const result = evaluateFlowTs(tsCode);
       if (!isFlowLike(result)) {
-        return {
-          doc: null,
-          error: "TS code must evaluate to flow({...}) result.",
-        };
+        return { doc: null, error: "TS code must evaluate to flow({...}) result." };
       }
       return { doc: result as FlowDsl, error: null };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Invalid flow TS";
       return { doc: null, error: message };
     }
-  }, [code]);
+  }, [tsCode]);
 
   const [runtime, setRuntime] = useState<FlowRuntimeState | null>(null);
 
   useEffect(() => {
-    if (parsed.doc === null) {
+    if (parsedTs.doc === null) {
       setRuntime(null);
       return;
     }
-    setRuntime(flowApi.createFlowRuntime(parsed.doc));
-  }, [parsed.doc]);
+    setRuntime(flowApi.createFlowRuntime(parsedTs.doc));
+  }, [parsedTs.doc]);
 
-  const activeFlow = parsed.doc;
+  const activeFlow = parsedTs.doc;
   const activeRuntime = runtime;
   const activeActions =
     activeFlow && activeRuntime
@@ -254,6 +275,20 @@ export function FlowPage() {
       ? flowApi.getActiveFormId(activeRuntime)
       : null;
 
+  const jsxPreview = useMemo(() => {
+    if (parsedJsx.ir === null) return null;
+    try {
+      return renderDsl(parsedJsx.ir);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Render error";
+      return (
+        <Alert variant="light" color="red" icon={<IconAlertCircle size={16} />}>
+          Failed to render: {message}
+        </Alert>
+      );
+    }
+  }, [parsedJsx.ir]);
+
   return (
     <Stack gap="xl">
       <div>
@@ -264,14 +299,17 @@ export function FlowPage() {
           Flow Editor
         </Title>
         <Text c="dimmed" size="lg">
-          Описывайте несколько форм и переходы action → form в TS DSL. Поддерживаются stack, back и modal.
+          Start with a single <Code>.openmockup</Code> screen or switch to Flow TS to describe multi-screen transitions.
         </Text>
       </div>
 
       <Divider />
 
       <Group>
-        <Button variant="default" onClick={() => setCode(initialFlowCode)}>
+        <Button variant="default" onClick={() => setJsxCode(initialJsxCode)}>
+          Reset JSX sample
+        </Button>
+        <Button variant="default" onClick={() => setTsCode(initialFlowCode)}>
           Reset flow sample
         </Button>
         <Button variant="default" onClick={() => setShowCodePanel((value) => !value)}>
@@ -283,41 +321,76 @@ export function FlowPage() {
         {showCodePanel && (
           <Paper withBorder radius="md" p="md" style={{ minHeight: 760, height: 760, overflow: "hidden" }}>
             <Stack gap="sm" style={{ height: "100%" }}>
-              <Text fw={600}>Flow TS Editor</Text>
+              <Group justify="space-between">
+                <Text fw={600}>Editor</Text>
+                <SegmentedControl
+                  size="xs"
+                  value={editorMode}
+                  onChange={(value) => setEditorMode(value as "jsx" | "ts")}
+                  data={[
+                    { label: ".openmockup", value: "jsx" },
+                    { label: "Flow TS", value: "ts" },
+                  ]}
+                />
+              </Group>
 
               <Box style={{ flex: 1, minHeight: 0 }}>
-                <Editor
-                  height="100%"
-                  defaultLanguage="typescript"
-                  value={code}
-                  onChange={(value) => setCode(value ?? "")}
-                  onMount={(_, monaco) => {
-                    if (completionRegistered.current) return;
-                    completionRegistered.current = true;
-                    registerFlowCompletion(monaco);
-                  }}
-                  theme={isDark ? "vs-dark" : "light"}
-                  options={{
-                    minimap: { enabled: false },
-                    fontSize: 13,
-                    tabSize: 2,
-                    quickSuggestions: true,
-                    wordBasedSuggestions: "off",
-                    suggestOnTriggerCharacters: true,
-                    scrollBeyondLastLine: false,
-                    automaticLayout: true,
-                  }}
-                />
+                {editorMode === "jsx" ? (
+                  <Editor
+                    height="100%"
+                    defaultLanguage="jsx"
+                    value={jsxCode}
+                    onChange={(value) => setJsxCode(value ?? "")}
+                    theme={isDark ? "vs-dark" : "light"}
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 13,
+                      tabSize: 2,
+                      scrollBeyondLastLine: false,
+                      automaticLayout: true,
+                    }}
+                  />
+                ) : (
+                  <Editor
+                    height="100%"
+                    defaultLanguage="typescript"
+                    value={tsCode}
+                    onChange={(value) => setTsCode(value ?? "")}
+                    onMount={(_, monaco) => {
+                      if (completionRegistered.current) return;
+                      completionRegistered.current = true;
+                      registerFlowCompletion(monaco);
+                    }}
+                    theme={isDark ? "vs-dark" : "light"}
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 13,
+                      tabSize: 2,
+                      quickSuggestions: true,
+                      wordBasedSuggestions: "off",
+                      suggestOnTriggerCharacters: true,
+                      scrollBeyondLastLine: false,
+                      automaticLayout: true,
+                    }}
+                  />
+                )}
               </Box>
 
-              {parsed.error !== null && (
+              {editorMode === "jsx" && parsedJsx.error !== null && (
                 <Alert variant="light" color="red" icon={<IconAlertCircle size={16} />}>
-                  {parsed.error}
+                  {parsedJsx.error}
                 </Alert>
               )}
-              <Text size="xs" c="dimmed">
-                Используйте <Code>flow</Code>, <Code>flowForm</Code>, <Code>flowTransition</Code> и обычные builders из DSL.
-              </Text>
+              {editorMode === "ts" && parsedTs.error !== null && (
+                <Alert variant="light" color="red" icon={<IconAlertCircle size={16} />}>
+                  {parsedTs.error}
+                </Alert>
+              )}
+              {editorMode === "ts" && (
+                <Text size="xs" c="dimmed">
+                  Use <Code>flow</Code>, <Code>flowForm</Code>, <Code>flowTransition</Code> and DSL builders.
+                </Text>
+              )}
             </Stack>
           </Paper>
         )}
@@ -326,65 +399,92 @@ export function FlowPage() {
           <Stack gap={0}>
             <Box p="md" style={{ borderBottom: `1px solid ${isDark ? "var(--mantine-color-dark-4)" : "var(--mantine-color-gray-3)"}` }}>
               <Group justify="space-between">
-                <Text fw={600}>Runtime Preview</Text>
-                {activeFormId !== null && <Code>{activeFormId}</Code>}
+                <Text fw={600}>
+                  {editorMode === "jsx" ? "Preview" : "Runtime Preview"}
+                </Text>
+                {editorMode === "ts" && activeFormId !== null && <Code>{activeFormId}</Code>}
               </Group>
             </Box>
 
-            <Stack p="md" gap="sm">
-              {activeRuntime !== null && (
-                <Text size="xs" c="dimmed">
-                  Stack: {activeRuntime.stack.join(" -> ")}
-                  {activeRuntime.modalStack.length > 0 ? ` | Modals: ${activeRuntime.modalStack.join(" -> ")}` : ""}
-                </Text>
-              )}
-
-              <Group gap="xs">
-                {activeActions.map((action) => (
-                  <Button
-                    key={action}
-                    size="xs"
-                    variant="light"
-                    onClick={() => trigger(action)}
-                  >
-                    {String(action)}
-                  </Button>
-                ))}
-                {activeActions.length === 0 && <Text size="xs" c="dimmed">No actions for current form.</Text>}
-              </Group>
-
-              <Divider />
-
-              {baseForm !== null ? (
-                <Box p="lg" style={{ borderRadius: 8, backgroundColor: isDark ? "var(--mantine-color-dark-6)" : "var(--mantine-color-gray-0)" }}>
-                  {render(baseForm.doc, mantineRenderer)}
+            {editorMode === "jsx" ? (
+              <Box
+                p="xl"
+                style={{
+                  backgroundImage: `radial-gradient(${isDark ? "var(--mantine-color-dark-2)" : "var(--mantine-color-gray-4)"} 1px, transparent 1px)`,
+                  backgroundSize: "20px 20px",
+                  minHeight: 700,
+                  backgroundColor: isDark ? "var(--mantine-color-dark-8)" : "var(--mantine-color-white)",
+                }}
+              >
+                <Box
+                  p="lg"
+                  style={{
+                    backgroundColor: isDark ? "var(--mantine-color-dark-5)" : "var(--mantine-color-white)",
+                    borderRadius: "var(--mantine-radius-md)",
+                    minHeight: 620,
+                  }}
+                >
+                  {jsxPreview}
                 </Box>
-              ) : (
-                <Text size="sm" c="dimmed">Flow is not parsed yet.</Text>
-              )}
-            </Stack>
+              </Box>
+            ) : (
+              <Stack p="md" gap="sm">
+                {activeRuntime !== null && (
+                  <Text size="xs" c="dimmed">
+                    Stack: {activeRuntime.stack.join(" -> ")}
+                    {activeRuntime.modalStack.length > 0 ? ` | Modals: ${activeRuntime.modalStack.join(" -> ")}` : ""}
+                  </Text>
+                )}
+
+                <Group gap="xs">
+                  {activeActions.map((action) => (
+                    <Button
+                      key={action}
+                      size="xs"
+                      variant="light"
+                      onClick={() => trigger(action)}
+                    >
+                      {String(action)}
+                    </Button>
+                  ))}
+                  {activeActions.length === 0 && <Text size="xs" c="dimmed">No actions for current form.</Text>}
+                </Group>
+
+                <Divider />
+
+                {baseForm !== null ? (
+                  <Box p="lg" style={{ borderRadius: 8, backgroundColor: isDark ? "var(--mantine-color-dark-6)" : "var(--mantine-color-gray-0)" }}>
+                    {render(baseForm.doc, mantineRenderer)}
+                  </Box>
+                ) : (
+                  <Text size="sm" c="dimmed">Flow is not parsed yet.</Text>
+                )}
+              </Stack>
+            )}
           </Stack>
         </Paper>
       </Box>
 
-      <Modal
-        opened={modalForm !== null}
-        onClose={() => {
-          if (!activeFlow || modalForm === null) return;
-          setRuntime((prev) => {
-            if (prev === null) return prev;
-            const closeTransition = activeFlow.transitions.find(
-              (item) => item.from === modalForm.id && item.mode === "back"
-            );
-            if (!closeTransition) return prev;
-            return flowApi.triggerAction(activeFlow, prev, closeTransition.action);
-          });
-        }}
-        title={modalForm?.doc.page.title}
-        centered
-      >
-        {modalForm !== null && render(modalForm.doc, mantineRenderer)}
-      </Modal>
+      {editorMode === "ts" && (
+        <Modal
+          opened={modalForm !== null}
+          onClose={() => {
+            if (!activeFlow || modalForm === null) return;
+            setRuntime((prev) => {
+              if (prev === null) return prev;
+              const closeTransition = activeFlow.transitions.find(
+                (item) => item.from === modalForm.id && item.mode === "back"
+              );
+              if (!closeTransition) return prev;
+              return flowApi.triggerAction(activeFlow, prev, closeTransition.action);
+            });
+          }}
+          title={modalForm?.doc.page.title}
+          centered
+        >
+          {modalForm !== null && render(modalForm.doc, mantineRenderer)}
+        </Modal>
+      )}
     </Stack>
   );
 }
