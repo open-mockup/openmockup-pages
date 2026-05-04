@@ -23,6 +23,7 @@ import type { ActionRef } from "@openmockup/dsl";
 import { mantineRenderer, renderDsl } from "@openmockup/renderer-mantine";
 import { render } from "@openmockup/renderer-core";
 import { parseJsx } from "@openmockup/parser-jsx";
+import { normalizeJsx } from "../utils/normalizeJsx";
 import * as flowApi from "@openmockup/flow";
 import type { FlowDsl, FlowRuntimeState } from "@openmockup/flow";
 
@@ -214,7 +215,7 @@ export function FlowPage() {
 
   const parsedJsx = useMemo(() => {
     try {
-      const raw = parseJsx(jsxCode);
+      const raw = parseJsx(normalizeJsx(jsxCode));
       // parseJsx wraps in a "page" root; renderDsl expects the layout node
       const ir = raw.root.dslType === "page" && "children" in raw.root && raw.root.children.length > 0
         ? { ...raw, root: raw.root.children[0]! }
