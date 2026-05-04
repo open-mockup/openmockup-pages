@@ -24,7 +24,6 @@ import { renderDsl } from "@openmockup/renderer-mantine";
 import { render } from "@openmockup/renderer-core";
 import { parseJsx } from "@openmockup/parser-jsx";
 import { useMediaQuery } from "@mantine/hooks";
-import { normalizeJsx } from "../utils/normalizeJsx";
 
 const initialJsxCode = `<Page title="Playground form">
   <Form>
@@ -108,7 +107,7 @@ export function PlaygroundPage() {
 
   const parsedJsx = useMemo(() => {
     try {
-      const raw = parseJsx(normalizeJsx(jsxCode));
+      const raw = parseJsx(jsxCode);
       // parseJsx wraps in a "page" root; renderDsl expects the layout node
       const ir = raw.root.dslType === "page" && "children" in raw.root && raw.root.children.length > 0
         ? { ...raw, root: raw.root.children[0]! }
