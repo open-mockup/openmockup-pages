@@ -21,23 +21,23 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@openmockup/dsl':
-        specifier: 0.1.2
-        version: 0.1.2
+        specifier: 0.1.6
+        version: 0.1.6
       '@openmockup/flow':
-        specifier: 0.1.2
-        version: 0.1.2
+        specifier: 0.1.6
+        version: 0.1.6
       '@openmockup/parser-jsx':
-        specifier: 0.1.2
-        version: 0.1.2
+        specifier: 0.1.6
+        version: 0.1.6
       '@openmockup/renderer-core':
-        specifier: 0.1.2
-        version: 0.1.2
+        specifier: 0.1.6
+        version: 0.1.6
       '@openmockup/renderer-jsx':
-        specifier: 0.1.2
-        version: 0.1.2
+        specifier: 0.1.6
+        version: 0.1.6
       '@openmockup/renderer-mantine':
-        specifier: 0.1.2
-        version: 0.1.2(@mantine/core@7.17.8(@mantine/hooks@7.17.8(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        specifier: 0.1.6
+        version: 0.1.6(@mantine/core@7.17.8(@mantine/hooks@7.17.8(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@tabler/icons-react':
         specifier: ^3.31.0
         version: 3.41.1(react@18.3.1)
@@ -367,23 +367,23 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@openmockup/dsl@0.1.2':
-    resolution: {integrity: sha512-KeVz+n7GR0w167KuJI+iacBA86SHTRP8pms1U9/lgwrYFjGQ86W0n+hGzaN4ApRbTV/c02c/vB5ihd/dmAvWRg==}
+  '@openmockup/dsl@0.1.6':
+    resolution: {integrity: sha512-JtMAP00K6giLlOa/WGSA/NDf8WFvSajuSEspV6ul34WzNCv9St+o6y6jZQwF5zrjkoxd6ypceL/LjwueDNY6aw==}
 
-  '@openmockup/flow@0.1.2':
-    resolution: {integrity: sha512-hCAETCcLtjJGzDBdhFM5OubmcGTBCHTIQXvlnt9Wn7DThULvLxD8NPjdOvGvmjozFkOju2YY3gyUNYvRZe43aQ==}
+  '@openmockup/flow@0.1.6':
+    resolution: {integrity: sha512-YAdp8A3QdU8MIwro+AHO39xBm9wgum7rCWrfpCZc7/WKgCYdImfAEy04tdAZcRHph2fXmOb8e/VuOyvTG4VVJQ==}
 
-  '@openmockup/parser-jsx@0.1.2':
-    resolution: {integrity: sha512-bXYZDOd12mrqtyhS9Azk+mYbfPiSxfNKO3qKlYHbeiKDh0gSOdTYHsrNxFKfe8emO8V0qrxnQQUi2VDsC6z+Cw==}
+  '@openmockup/parser-jsx@0.1.6':
+    resolution: {integrity: sha512-bKx2JWzdgfP1ub+GS0q+SpfzSUsLp1zn59Ou62w2B0592B4IoiVQ2Qpq1L3btrhlaw9B+xUmEI3wPxjm2SKAhQ==}
 
-  '@openmockup/renderer-core@0.1.2':
-    resolution: {integrity: sha512-PmfIZqEo9MycyRH3lkT2AR54P2D/SjqViypf3JnZS79qFd8YKbatEQTTJHxPgkia2rTo/9Xtz9iQ9qO50biSpQ==}
+  '@openmockup/renderer-core@0.1.6':
+    resolution: {integrity: sha512-vLADg06zg7ZGXGhRmhm+KdLoVuvQ3+O4m2s/B7wPLd4F0Zqi6XFfC+vUmcDN058g0ygUZ+YW81HMmCXW1iZcEg==}
 
-  '@openmockup/renderer-jsx@0.1.2':
-    resolution: {integrity: sha512-LRoBaHqFM8TlY9CKzrDBTzrp3lt4jd/NwLQzJJ9hFUi06p49Y1ZVpuM8sbVdaI8XmbukGyCqPIdhovBTgyOpwg==}
+  '@openmockup/renderer-jsx@0.1.6':
+    resolution: {integrity: sha512-ZcaD8mn3h57yJ4AKdWRA9k5IDFFEl/eU6kZkZsAhkgOAApLGCGYStTvdyDmaWBTikmvClwAVnKrMc+/5e7wqrw==}
 
-  '@openmockup/renderer-mantine@0.1.2':
-    resolution: {integrity: sha512-YcS8d1FY/SZgQQ2rgC+valVhBjwRtS96coavTnkP7Vl9DrnFx+wnc1MJ0eVFOkpqbFBeNhQe297MtyEx41QNnA==}
+  '@openmockup/renderer-mantine@0.1.6':
+    resolution: {integrity: sha512-c2aCkwPXfyjyHnPGDwXNVxkv28LboyKlLg/nNHDG4r00sHTO94GSFTDLs7TjYSdIyLvC6huJSCIwzkBXWT8idA==}
     peerDependencies:
       '@mantine/core': '>=7.0.0'
       react: '>=18.0.0'
@@ -1195,31 +1195,33 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@openmockup/dsl@0.1.2': {}
+  '@openmockup/dsl@0.1.6': {}
 
-  '@openmockup/flow@0.1.2':
+  '@openmockup/flow@0.1.6':
     dependencies:
-      '@openmockup/dsl': 0.1.2
+      '@openmockup/renderer-core': 0.1.6
 
-  '@openmockup/parser-jsx@0.1.2':
+  '@openmockup/parser-jsx@0.1.6':
     dependencies:
-      '@openmockup/renderer-core': 0.1.2
+      '@openmockup/flow': 0.1.6
+      '@openmockup/renderer-core': 0.1.6
       acorn: 8.16.0
       acorn-jsx: 5.3.2(acorn@8.16.0)
 
-  '@openmockup/renderer-core@0.1.2':
+  '@openmockup/renderer-core@0.1.6':
     dependencies:
-      '@openmockup/dsl': 0.1.2
+      '@openmockup/dsl': 0.1.6
 
-  '@openmockup/renderer-jsx@0.1.2':
+  '@openmockup/renderer-jsx@0.1.6':
     dependencies:
-      '@openmockup/renderer-core': 0.1.2
+      '@openmockup/flow': 0.1.6
+      '@openmockup/renderer-core': 0.1.6
 
-  '@openmockup/renderer-mantine@0.1.2(@mantine/core@7.17.8(@mantine/hooks@7.17.8(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@openmockup/renderer-mantine@0.1.6(@mantine/core@7.17.8(@mantine/hooks@7.17.8(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@mantine/core': 7.17.8(@mantine/hooks@7.17.8(react@18.3.1))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@openmockup/dsl': 0.1.2
-      '@openmockup/renderer-core': 0.1.2
+      '@openmockup/dsl': 0.1.6
+      '@openmockup/renderer-core': 0.1.6
       react: 18.3.1
 
   '@rolldown/pluginutils@1.0.0-beta.27': {}
