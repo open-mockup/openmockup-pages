@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Alert,
   Badge,
   Box,
   Divider,
@@ -11,7 +10,6 @@ import {
   Title,
 } from "@mantine/core";
 import { CodeHighlight } from "@mantine/code-highlight";
-import { IconRobot } from "@tabler/icons-react";
 
 /* ── helpers ─────────────────────────────────────────────────────────── */
 
@@ -95,26 +93,6 @@ export function LlmReferencePage() {
           Single-page reference for AI agents. Covers JSX syntax, all
           components, Flow navigation, and Obsidian code fences.
         </Text>
-        <Alert
-          variant="filled"
-          color="blue"
-          icon={<IconRobot size={16} />}
-          mb="xl"
-        >
-          Raw Markdown endpoint for LLM system prompts:{" "}
-          <Text
-            span
-            ff="monospace"
-            size="sm"
-            component="a"
-            href="/llm-reference.md"
-            target="_blank"
-            style={{ color: "inherit", textDecoration: "underline" }}
-          >
-            /llm-reference.md
-          </Text>{" "}
-          — paste this URL so the model can fetch the full reference on demand.
-        </Alert>
       </Box>
 
       <Divider mb="xl" />
