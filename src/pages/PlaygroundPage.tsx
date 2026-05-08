@@ -16,7 +16,7 @@ import {
   useComputedColorScheme,
 } from "@mantine/core";
 import Editor from "@monaco-editor/react";
-import { IconAlertCircle } from "@tabler/icons-react";
+import { IconAlertCircle, IconRobot } from "@tabler/icons-react";
 import type { MockupDoc } from "@openmockup/dsl";
 import * as dslApi from "@openmockup/dsl";
 import { mantineRenderer } from "@openmockup/renderer-mantine";
@@ -93,7 +93,7 @@ const componentGroups: Array<{ key: string; label: string; items: string[] }> = 
   },
 ];
 
-export function PlaygroundPage() {
+export function PlaygroundPage({ onNavigate }: { onNavigate?: (id: string) => void }) {
   const isDark = useComputedColorScheme("light") === "dark";
   const isNarrow = useMediaQuery("(max-width: 62em)");
   const splitRef = useRef<HTMLDivElement | null>(null);
@@ -200,6 +200,18 @@ export function PlaygroundPage() {
       </div>
 
       <Divider />
+
+      <Alert
+        variant="light"
+        color="blue"
+        icon={<IconRobot size={16} />}
+        title="Для AI-агентов"
+        style={{ cursor: onNavigate ? "pointer" : "default" }}
+        onClick={() => onNavigate?.("llm-reference")}
+      >
+        LLM Reference — однострочная справка по всем компонентам, JSX-синтаксу,
+        Flow и Obsidian-фенсам. Нажмите, чтобы открыть.
+      </Alert>
 
       <Group>
         <Button variant="default" onClick={() => setJsxCode(initialJsxCode)}>

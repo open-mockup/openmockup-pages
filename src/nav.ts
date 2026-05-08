@@ -14,6 +14,7 @@ export const navigation: NavSection[] = [
     items: [
       { label: "Live Editor", id: "playground" },
       { label: "Flow Editor", id: "flow-editor" },
+      { label: "LLM Reference", id: "llm-reference" },
     ],
   },
   {

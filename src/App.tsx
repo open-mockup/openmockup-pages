@@ -12,6 +12,7 @@ import { OverlayPage } from "./pages/OverlayPage.js";
 import { PlaygroundPage } from "./pages/PlaygroundPage.js";
 import { TextPage } from "./pages/TextPage.js";
 import { CookbookPage } from "./pages/CookbookPage.js";
+import { LlmReferencePage } from "./pages/LlmReferencePage.js";
 
 export function App() {
   const [page, setPage] = useState("playground");
@@ -19,11 +20,13 @@ export function App() {
   function renderPage() {
     switch (page) {
       case "playground":
-        return <PlaygroundPage />;
+        return <PlaygroundPage onNavigate={setPage} />;
       case "flow-editor":
         return <FlowPage />;
       case "cookbook":
         return <CookbookPage />;
+      case "llm-reference":
+        return <LlmReferencePage />;
 
       case "label":
       case "heading":
