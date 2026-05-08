@@ -19,9 +19,8 @@ import { useMediaQuery } from "@mantine/hooks";
 import Editor from "@monaco-editor/react";
 import { IconAlertCircle } from "@tabler/icons-react";
 import * as dslApi from "@openmockup/dsl";
-import type { ActionRef } from "@openmockup/dsl";
 import { mantineRenderer, renderDsl } from "@openmockup/renderer-mantine";
-import { render } from "@openmockup/renderer-core";
+import { renderIr } from "@openmockup/renderer-core";
 import { parseJsx } from "@openmockup/parser-jsx";
 import * as flowApi from "@openmockup/flow";
 import type { FlowDsl, FlowRuntimeState } from "@openmockup/flow";
@@ -256,7 +255,7 @@ export function FlowPage() {
       ? flowApi.listAvailableActions(activeFlow, activeRuntime)
       : [];
 
-  const trigger = (action: ActionRef) => {
+  const trigger = (action: string) => {
     if (!activeFlow) return;
     setRuntime((prev) => {
       if (prev === null) return prev;
@@ -458,7 +457,7 @@ export function FlowPage() {
 
                 {baseForm !== null ? (
                   <Box p="lg" style={{ borderRadius: 8, backgroundColor: isDark ? "var(--mantine-color-dark-6)" : "var(--mantine-color-gray-0)" }}>
-                    {render(baseForm.doc, mantineRenderer)}
+                    {renderIr(baseForm.doc, mantineRenderer)}
                   </Box>
                 ) : (
                   <Text size="sm" c="dimmed">Flow is not parsed yet.</Text>
@@ -480,13 +479,13 @@ export function FlowPage() {
                 (item) => item.from === modalForm.id && item.mode === "back"
               );
               if (!closeTransition) return prev;
-              return flowApi.triggerAction(activeFlow, prev, closeTransition.action);
+              return flowApi.triggerAction(activeFlow, prev, closeTransition.on);
             });
           }}
-          title={modalForm?.doc.page.title}
+          title={modalForm?.doc.title}
           centered
         >
-          {modalForm !== null && render(modalForm.doc, mantineRenderer)}
+          {modalForm !== null && renderIr(modalForm.doc, mantineRenderer)}
         </Modal>
       )}
     </Stack>
