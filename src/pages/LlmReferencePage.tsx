@@ -96,17 +96,24 @@ export function LlmReferencePage() {
           components, Flow navigation, and Obsidian code fences.
         </Text>
         <Alert
-          variant="light"
+          variant="filled"
           color="blue"
           icon={<IconRobot size={16} />}
           mb="xl"
         >
-          Stable endpoint:{" "}
-          <Text span ff="monospace" size="sm">
-            /llm-reference
+          Raw Markdown endpoint for LLM system prompts:{" "}
+          <Text
+            span
+            ff="monospace"
+            size="sm"
+            component="a"
+            href="/llm-reference.md"
+            target="_blank"
+            style={{ color: "inherit", textDecoration: "underline" }}
+          >
+            /llm-reference.md
           </Text>{" "}
-          — paste this URL into your system prompt so the model can look up any
-          component or syntax rule on demand.
+          — paste this URL so the model can fetch the full reference on demand.
         </Alert>
       </Box>
 
