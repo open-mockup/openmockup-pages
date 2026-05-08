@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Alert,
   AppShell,
   Badge,
   Box,
@@ -8,14 +9,15 @@ import {
   NavLink,
   ScrollArea,
   Text,
-  Title,
   useComputedColorScheme,
   useMantineColorScheme,
   ActionIcon,
   Divider,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconMoon, IconSun, IconBrandGithub, IconChevronsLeft, IconChevronsRight } from "@tabler/icons-react";
+import { IconMoon, IconSun, IconBrandGithub, IconChevronsLeft, IconChevronsRight, IconRobot } from "@tabler/icons-react";
+
+const LLM_REF_URL = `${import.meta.env.BASE_URL}llm-reference.md`;
 import { navigation } from "../nav.js";
 
 interface ShellProps {
@@ -49,7 +51,7 @@ export function Shell({ activePage, onNavigate, children }: ShellProps) {
               Open Mockup
             </Text>
             <Badge size="xs" variant="light" color="indigo">
-              DSL v0.1
+              DSL v0.1.6
             </Badge>
           </Group>
 
@@ -120,6 +122,30 @@ export function Shell({ activePage, onNavigate, children }: ShellProps) {
         >
           {desktopOpened ? <IconChevronsLeft size={16} /> : <IconChevronsRight size={16} />}
         </ActionIcon>
+        <Alert
+          variant="filled"
+          color="blue"
+          icon={<IconRobot size={16} />}
+          radius={0}
+          py={6}
+          style={{ borderBottom: "1px solid var(--mantine-color-blue-7)" }}
+        >
+          <Text size="sm">
+            LLM Reference (Markdown):{" "}
+            <Text
+              span
+              ff="monospace"
+              size="sm"
+              component="a"
+              href={LLM_REF_URL}
+              target="_blank"
+              style={{ color: "inherit", textDecoration: "underline" }}
+            >
+              {LLM_REF_URL}
+            </Text>
+            {" "}— вставьте в system prompt для on-demand справки по компонентам.
+          </Text>
+        </Alert>
         <Box maw={1500} mx="auto" px={{ base: "sm", md: "md" }} py="lg">
           {children}
         </Box>
