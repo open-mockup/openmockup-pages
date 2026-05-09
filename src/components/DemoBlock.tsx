@@ -41,7 +41,7 @@ export function DemoBlock({ title, doc, code }: DemoBlockProps) {
           >
             <Tabs.List style={{ border: "none" }}>
               <Tabs.Tab value="preview">Preview</Tabs.Tab>
-              <Tabs.Tab value="openmockup">.openmockup</Tabs.Tab>
+              <Tabs.Tab value="openmockup">openmockup(.om)</Tabs.Tab>
               <Tabs.Tab value="code">Builder code</Tabs.Tab>
             </Tabs.List>
           </Box>

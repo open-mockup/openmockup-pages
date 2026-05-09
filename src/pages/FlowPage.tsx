@@ -302,7 +302,7 @@ export function FlowPage() {
           Flow Editor
         </Title>
         <Text c="dimmed" size="lg">
-          Start with a single <Code>.openmockup</Code> screen or switch to Flow TS to describe multi-screen transitions.
+          Start with a single <Code>openmockup(.om)</Code> screen or switch to Flow TS to describe multi-screen transitions.
         </Text>
       </div>
 
@@ -331,7 +331,7 @@ export function FlowPage() {
                   value={editorMode}
                   onChange={(value) => setEditorMode(value as "jsx" | "ts")}
                   data={[
-                    { label: ".openmockup", value: "jsx" },
+                    { label: "openmockup(.om)", value: "jsx" },
                     { label: "Flow TS", value: "ts" },
                   ]}
                 />

@@ -195,7 +195,7 @@ export function PlaygroundPage({ onNavigate }: { onNavigate?: (id: string) => vo
           Live DSL Editor
         </Title>
         <Text c="dimmed" size="lg">
-          Edit .openmockup JSX or TypeScript on the left. Preview updates immediately on the right.
+          Edit openmockup(.om) JSX or TypeScript on the left. Preview updates immediately on the right.
         </Text>
       </div>
 
@@ -255,7 +255,7 @@ export function PlaygroundPage({ onNavigate }: { onNavigate?: (id: string) => vo
                   value={editorMode}
                   onChange={(value) => setEditorMode(value as "jsx" | "ts")}
                   data={[
-                    { label: ".openmockup", value: "jsx" },
+                    { label: "openmockup(.om)", value: "jsx" },
                     { label: "Builder (TS)", value: "ts" },
                   ]}
                 />

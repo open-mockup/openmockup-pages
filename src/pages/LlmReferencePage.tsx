@@ -102,17 +102,12 @@ export function LlmReferencePage() {
       <PropTable
         rows={[
           ["Extension", "Description"],
-          [".openmockup", "Single-screen JSX mockup"],
-          [".omx", "Same as above, flow-aware (for multi-screen projects)"],
-          [".flow.omx", "Multi-screen navigation graph"],
-          [".dsl.ts", "TypeScript builder source"],
-          [".uidsl.json", "Canonical JSON IR (machine output)"],
+          [".om", "Single-screen JSX mockup"],
+          [".flow.om", "Multi-screen navigation graph"],
         ]}
       />
       <P>
-        All formats share the same component vocabulary. JSX files (
-        <code>.openmockup</code>, <code>.omx</code>) are the primary authoring
-        format.
+        openmockup(.om) files are the primary authoring format.
       </P>
 
       <Divider my="xl" />
@@ -565,8 +560,8 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       <PropTable
         rows={[
           ["File", "Purpose"],
-          ["screen.omx", "Single page, authored in JSX"],
-          ["app.flow.omx", "Navigation graph referencing pages"],
+          ["screen.om", "Single page, authored in JSX"],
+          ["app.flow.om", "Navigation graph referencing pages"],
         ]}
       />
 
@@ -576,9 +571,9 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
         code={`<Flow initial="contact">
 
   <!-- external files -->
-  <Page id="contact"    src="./contact.omx" />
-  <Page id="shipping"   src="./shipping.omx" />
-  <Page id="help-modal" src="./help-modal.omx" />
+  <Page id="contact"    src="./contact.om" />
+  <Page id="shipping"   src="./shipping.om" />
+  <Page id="help-modal" src="./help-modal.om" />
 
   <!-- inline page (small auxiliary screens) -->
   <Page id="done">
@@ -635,7 +630,7 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       <H3>Page resolution order</H3>
       <Code
         lang="text"
-        code={`1. src="./path.omx"              → explicit file
+        code={`1. src="./path.om"               → explicit file
 2. name="x" in same document     → local named block
 3. name="x" anywhere in vault    → global search
 4. not found                     → error: "page 'x' not found"`}
@@ -646,12 +641,12 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       {/* ── Obsidian ─────────────────────────────────────────────── */}
       <H2>Obsidian / Markdown code fences</H2>
       <P>
-        Use <code>```omx</code> as the language identifier. The{" "}
+        Use <code>```om</code> as the language identifier. The{" "}
         <code>name=""</code> attribute makes a block addressable by any flow.
       </P>
       <Code
         lang="markdown"
-        code={`\`\`\`omx name="contact" actions="submit, help"
+        code={`\`\`\`om name="contact" actions="submit, help"
 <Page title="Contact">
   <Form>
     <Field name="email" label="Email" component="textInput" required />
@@ -672,7 +667,7 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       <H3>uses — explicit dependencies</H3>
       <Code
         lang="markdown"
-        code={`\`\`\`omx name="checkout-flow" uses="contact, shipping, help-modal"
+        code={`\`\`\`om name="checkout-flow" uses="contact, shipping, help-modal"
 <Flow initial="contact">
   <Page id="contact" />
   <Page id="shipping" />
@@ -688,7 +683,7 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       <H3>actions — action contract</H3>
       <Code
         lang="markdown"
-        code={`\`\`\`omx name="contact" actions="submit, help"
+        code={`\`\`\`om name="contact" actions="submit, help"
 …
 \`\`\``}
       />
@@ -698,17 +693,17 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
         for that page.
       </P>
 
-      <H3>Editor setup for .omx files</H3>
+      <H3>Editor setup for .om files</H3>
       <P>
         <strong>VS Code</strong> — <code>.vscode/settings.json</code>:
       </P>
       <Code
         lang="json"
-        code={`{ "files.associations": { "*.omx": "javascriptreact" } }`}
+        code={`{ "files.associations": { "*.om": "javascriptreact" } }`}
       />
       <P>
         <strong>IntelliJ / WebStorm</strong>: Settings → Editor → File Types →
-        JSX → add <code>*.omx</code>.
+        JSX → add <code>*.om</code>.
       </P>
 
       <Divider my="xl" />
@@ -758,7 +753,7 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
 
       <H2>Full example — multi-screen flow</H2>
       <P>
-        <strong>contact.omx</strong>
+        <strong>contact.om</strong>
       </P>
       <Code
         lang="jsx"
@@ -775,7 +770,7 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
 </Page>`}
       />
       <P>
-        <strong>shipping.omx</strong>
+        <strong>shipping.om</strong>
       </P>
       <Code
         lang="jsx"
@@ -792,14 +787,14 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
 </Page>`}
       />
       <P>
-        <strong>checkout.flow.omx</strong>
+        <strong>checkout.flow.om</strong>
       </P>
       <Code
         lang="jsx"
         code={`<Flow initial="contact">
-  <Page id="contact"    src="./contact.omx" />
-  <Page id="shipping"   src="./shipping.omx" />
-  <Page id="help-modal" src="./help-modal.omx" />
+  <Page id="contact"    src="./contact.om" />
+  <Page id="shipping"   src="./shipping.om" />
+  <Page id="help-modal" src="./help-modal.om" />
 
   <Page id="done">
     <Heading>Order placed!</Heading>
@@ -828,11 +823,11 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       <H2>CLI</H2>
       <Code
         lang="bash"
-        code={`openmockup page.openmockup          # validate — print title and node count
-openmockup fmt page.openmockup      # normalise and pretty-print JSX
-openmockup fmt page.openmockup -o out.openmockup
-openmockup ir  page.openmockup      # dump IR as JSON
-openmockup ir  page.openmockup | jq .title`}
+        code={`openmockup page.om          # validate — print title and node count
+openmockup fmt page.om      # normalise and pretty-print JSX
+openmockup fmt page.om -o out.om
+openmockup ir  page.om      # dump IR as JSON
+openmockup ir  page.om | jq .title`}
       />
 
       <Divider my="xl" />
@@ -873,8 +868,7 @@ const element = render(doc, mantineRenderer); // React.ReactElement`}
       {/* ── Generation rules ─────────────────────────────────────── */}
       <H2>Generation rules</H2>
       <P>
-        Follow these when producing <code>.openmockup</code> or{" "}
-        <code>.omx</code> files:
+        Follow these when producing openmockup(.om) files:
       </P>
       <List spacing="xs" mb="md">
         <List.Item>
@@ -903,8 +897,7 @@ const element = render(doc, mantineRenderer); // React.ReactElement`}
           separator: <code>\n</code>.
         </List.Item>
         <List.Item>
-          Run <code>openmockup path/to/file.openmockup</code> to validate
-          output.
+          Run <code>openmockup path/to/file.om</code> to validate output.
         </List.Item>
       </List>
     </Stack>

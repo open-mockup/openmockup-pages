@@ -8,13 +8,10 @@
 
 | Extension | Description |
 |---|---|
-| `.openmockup` | Single-screen JSX mockup |
-| `.omx` | Same as above, flow-aware (for multi-screen projects) |
-| `.flow.omx` | Multi-screen navigation graph |
-| `.dsl.ts` | TypeScript builder source |
-| `.uidsl.json` | Canonical JSON IR (machine output) |
+| `.om` | Single-screen JSX mockup |
+| `.flow.om` | Multi-screen navigation graph |
 
-All formats share the same component vocabulary. JSX files (`.openmockup`, `.omx`) are the primary authoring format.
+openmockup(.om) files are the primary authoring format.
 
 ---
 
@@ -450,8 +447,8 @@ For project-specific widgets with no matching core node. Never invent new core e
 
 | File | Purpose |
 |---|---|
-| `screen.omx` | Single page, authored in JSX |
-| `app.flow.omx` | Navigation graph referencing pages |
+| `screen.om` | Single page, authored in JSX |
+| `app.flow.om` | Navigation graph referencing pages |
 
 ### Flow file
 
@@ -459,9 +456,9 @@ For project-specific widgets with no matching core node. Never invent new core e
 <Flow initial="contact">
 
   <!-- external files -->
-  <Page id="contact"    src="./contact.omx" />
-  <Page id="shipping"   src="./shipping.omx" />
-  <Page id="help-modal" src="./help-modal.omx" />
+  <Page id="contact"    src="./contact.om" />
+  <Page id="shipping"   src="./shipping.om" />
+  <Page id="help-modal" src="./help-modal.om" />
 
   <!-- inline page (small auxiliary screens) -->
   <Page id="done">
@@ -514,7 +511,7 @@ For project-specific widgets with no matching core node. Never invent new core e
 ### Page resolution order
 
 ```
-1. src="./path.omx"              → explicit file
+1. src="./path.om"               → explicit file
 2. name="x" in same document     → local named block
 3. name="x" anywhere in vault    → global search
 4. not found                     → error: "page 'x' not found"
@@ -524,10 +521,10 @@ For project-specific widgets with no matching core node. Never invent new core e
 
 ## Obsidian / Markdown code fences
 
-Use ` ```omx ` as the language identifier. The `name=""` attribute makes a block addressable by any flow.
+Use ` ```om ` as the language identifier. The `name=""` attribute makes a block addressable by any flow.
 
 ````markdown
-```omx name="contact" actions="submit, help"
+```om name="contact" actions="submit, help"
 <Page title="Contact">
   <Form>
     <Field name="email" label="Email" component="textInput" required />
@@ -549,7 +546,7 @@ Reference it from a flow in any document:
 ### `uses` — explicit dependencies
 
 ````markdown
-```omx name="checkout-flow" uses="contact, shipping, help-modal"
+```om name="checkout-flow" uses="contact, shipping, help-modal"
 <Flow initial="contact">
   <Page id="contact" />
   <Page id="shipping" />
@@ -563,7 +560,7 @@ Reference it from a flow in any document:
 ### `actions` — action contract
 
 ````markdown
-```omx name="contact" actions="submit, help"
+```om name="contact" actions="submit, help"
 …
 ```
 ````
@@ -571,14 +568,14 @@ Reference it from a flow in any document:
 The flow parser warns if a declared action is not handled by any `<Go>`.  
 Omit `actions` to skip validation for that page.
 
-### Editor setup for `.omx` files
+### Editor setup for `.om` files
 
 **VS Code** — `.vscode/settings.json`:
 ```json
-{ "files.associations": { "*.omx": "javascriptreact" } }
+{ "files.associations": { "*.om": "javascriptreact" } }
 ```
 
-**IntelliJ / WebStorm**: Settings → Editor → File Types → JSX → add `*.omx`.
+**IntelliJ / WebStorm**: Settings → Editor → File Types → JSX → add `*.om`.
 
 ---
 
@@ -628,7 +625,7 @@ Omit `actions` to skip validation for that page.
 
 ## Full example — multi-screen flow
 
-**`contact.omx`**
+**`contact.om`**
 ```jsx
 <Page title="Contact info">
   <Form>
@@ -643,7 +640,7 @@ Omit `actions` to skip validation for that page.
 </Page>
 ```
 
-**`shipping.omx`**
+**`shipping.om`**
 ```jsx
 <Page title="Shipping">
   <Form>
@@ -658,12 +655,12 @@ Omit `actions` to skip validation for that page.
 </Page>
 ```
 
-**`checkout.flow.omx`**
+**`checkout.flow.om`**
 ```jsx
 <Flow initial="contact">
-  <Page id="contact"    src="./contact.omx" />
-  <Page id="shipping"   src="./shipping.omx" />
-  <Page id="help-modal" src="./help-modal.omx" />
+  <Page id="contact"    src="./contact.om" />
+  <Page id="shipping"   src="./shipping.om" />
+  <Page id="help-modal" src="./help-modal.om" />
 
   <Page id="done">
     <Heading>Order placed!</Heading>
@@ -691,11 +688,11 @@ Omit `actions` to skip validation for that page.
 ## CLI
 
 ```bash
-openmockup page.openmockup          # validate — print title and node count
-openmockup fmt page.openmockup      # normalise and pretty-print JSX
-openmockup fmt page.openmockup -o out.openmockup
-openmockup ir  page.openmockup      # dump IR as JSON
-openmockup ir  page.openmockup | jq .title
+openmockup page.om          # validate — print title and node count
+openmockup fmt page.om      # normalise and pretty-print JSX
+openmockup fmt page.om -o out.om
+openmockup ir  page.om      # dump IR as JSON
+openmockup ir  page.om | jq .title
 ```
 
 ---
@@ -735,7 +732,7 @@ const element = render(doc, mantineRenderer); // React.ReactElement
 
 ## Generation rules
 
-Follow these when producing `.openmockup` or `.omx` files:
+Follow these when producing openmockup(.om) files:
 
 1. Root is always `<Page title="…">`.
 2. Use `CustomComponent` for unknown widgets — never invent new core element names.
@@ -743,4 +740,4 @@ Follow these when producing `.openmockup` or `.omx` files:
 4. `boolean true` props use shorthand: `required`, not `required={true}`.
 5. `action` refs on `<Button action="…">` use `verb-object` style: `save-order`, `open-filter`, `row-edit`.
 6. Table cell separator: ` / ` (space-slash-space). Row separator: `\n`.
-7. Run `openmockup path/to/file.openmockup` to validate output.
+7. Run `openmockup path/to/file.om` to validate output.
