@@ -1,0 +1,51 @@
+---
+title: Dashboard header
+description: A compact header with title, breadcrumbs, and an action cluster.
+---
+
+import CodePreview from "../../../components/CodePreview.tsx";
+
+A header that sits above a dashboard view: a title, a breadcrumb trail
+to anchor where the user is, and a small cluster of primary actions on
+the right.
+
+## Pattern
+
+<CodePreview
+  client:visible
+  title="Dashboard header"
+  code={`<Stack direction="row" justify="between" align="center">
+  <Stack gap="xs">
+    <Breadcrumb items={["Workspace", "Projects", "Atlas"]} />
+    <Heading level={2}>Atlas</Heading>
+  </Stack>
+  <ActionBar>
+    <Button variant="ghost">Share</Button>
+    <Button variant="primary">New report</Button>
+  </ActionBar>
+</Stack>`}
+/>
+
+## When to use
+
+- The top of a workspace or project view, where users need to know
+  where they are and what they can do.
+- Any page where the primary action benefits from being one click away
+  from the title.
+
+## Variants
+
+- **Without breadcrumbs** — drop the `Breadcrumb` when the page is a
+  top-level destination.
+- **With status badge** — add a `Badge` next to the heading for state
+  like _Draft_, _Live_, _Archived_.
+- **Stacked on narrow screens** — switch `direction` to `column` on
+  mobile breakpoints; the action cluster wraps below the title.
+
+## Why this composition
+
+A row stack with `justify="between"` is the simplest way to anchor
+content at both edges of the header. The left column groups breadcrumb
+and title so they read as one unit; the right column is an
+`ActionBar` so spacing between buttons is consistent with other
+clusters in the app.

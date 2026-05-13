@@ -1,0 +1,54 @@
+---
+title: Flow — Versions and Visual Diff
+description: Capture flow versions and compare them side by side.
+---
+
+A flow rarely stays the same between the first sketch and the version
+you hand to engineering. OpenMockup keeps the history and gives you a
+visual diff between any two versions, so iteration leaves an audit
+trail instead of disappearing into undo stacks.
+
+## What gets versioned
+
+Every save of a flow snapshots:
+
+- **Screens** — the markup of each screen in the flow.
+- **Connections** — actions that link screens together.
+- **Flow-level metadata** — name, description, entry screen.
+
+Screen-level component props and slots are part of the markup, so
+prop-only edits show up in the diff just like structural changes.
+
+## What the diff shows
+
+Comparing two versions surfaces three kinds of change:
+
+1. **Structural** — screens added, removed, or renamed; connections
+   created or broken.
+2. **Content** — markup edits inside a screen, annotated so a reader
+   can see exactly which subtree moved.
+3. **Flow shape** — entry point changes, reordering, branching.
+
+The view is side by side, with matched screens aligned and unmatched
+screens called out in their own column.
+
+## Where it runs today
+
+:::caution[VS Code plugin only, for now]
+The visual flow diff currently lives in the **VS Code plugin**. The
+web playground has a [Diff Versions](/playground/diff/) preview, but
+the full diff experience — including screen-level highlighting — is
+plugin-only at the moment.
+
+The roadmap is to bring parity to the web playground. No date yet;
+follow the repo for updates.
+:::
+
+## Tips for useful diffs
+
+- **Commit a version before destructive edits.** A diff against a
+  fresh snapshot is more readable than one against three sessions ago.
+- **Name versions you care about.** "v1 — post-review" beats a
+  timestamp when you scroll the history six weeks later.
+- **Keep flows narrow.** Diffs across a 30-screen flow are noisy.
+  Split by feature where it makes sense.

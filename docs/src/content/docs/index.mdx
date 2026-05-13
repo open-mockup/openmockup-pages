@@ -1,0 +1,36 @@
+---
+title: OpenMockup
+description: A declarative tool for sketching UI mockups and screen flows.
+template: splash
+hero:
+  tagline: Sketch UI mockups and screen flows in a declarative language. Render them live. Diff versions over time.
+  actions:
+    - text: Get started
+      link: /guides/quickstart/
+      icon: right-arrow
+      variant: primary
+    - text: What is OpenMockup
+      link: /guides/introduction/
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+<CardGrid>
+  <Card title="Introduction" icon="open-book">
+    What OpenMockup is, who it is for, and what it deliberately is not.
+    [Read →](/guides/introduction/)
+  </Card>
+  <Card title="Quickstart" icon="rocket">
+    Build your first mockup in two minutes — no install, right in the browser.
+    [Read →](/guides/quickstart/)
+  </Card>
+  <Card title="Flow & Diff" icon="random">
+    Connect screens into flows and compare versions visually.
+    [Read →](/guides/flow-versions-and-diff/)
+  </Card>
+  <Card title="Cookbook" icon="puzzle">
+    Ready-made patterns you can lift into your own mockups.
+    [Read →](/cookbook/dashboard-header/)
+  </Card>
+</CardGrid>

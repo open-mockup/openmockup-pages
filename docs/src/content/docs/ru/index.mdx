@@ -1,0 +1,36 @@
+---
+title: OpenMockup
+description: Декларативный инструмент для быстрых UI-мокапов и пользовательских флоу.
+template: splash
+hero:
+  tagline: Рисуйте UI-мокапы и флоу на декларативном языке. Рендерите вживую. Сравнивайте версии визуально.
+  actions:
+    - text: Быстрый старт
+      link: /ru/guides/quickstart/
+      icon: right-arrow
+      variant: primary
+    - text: Что это такое
+      link: /ru/guides/introduction/
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+<CardGrid>
+  <Card title="Введение" icon="open-book">
+    Что такое OpenMockup, для кого он, и чем он намеренно не является.
+    [Читать →](/ru/guides/introduction/)
+  </Card>
+  <Card title="Быстрый старт" icon="rocket">
+    Первый мокап за две минуты — без установки, прямо в браузере.
+    [Читать →](/ru/guides/quickstart/)
+  </Card>
+  <Card title="Flow и Diff" icon="random">
+    Связывайте экраны в флоу и сравнивайте версии визуально.
+    [Читать →](/ru/guides/flow-versions-and-diff/)
+  </Card>
+  <Card title="Cookbook" icon="puzzle">
+    Готовые паттерны, которые можно перенести в свои мокапы.
+    [Читать →](/ru/cookbook/dashboard-header/)
+  </Card>
+</CardGrid>

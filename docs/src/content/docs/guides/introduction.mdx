@@ -1,0 +1,39 @@
+---
+title: Introduction
+description: What OpenMockup is, who it is for, and what it is not.
+---
+
+OpenMockup is a declarative tool for sketching UI mockups and screen flows.
+You describe screens in a compact markup language; the renderer turns them
+into live, interactive previews. Flows connect those screens into navigable
+prototypes, and versions can be diffed visually over time.
+
+## Who it is for
+
+- **Designers** who want to prototype faster than in a vector tool, with
+  real components and real interaction.
+- **Product managers** who want to communicate intent without producing
+  pixel-perfect mockups that get mistaken for finished design.
+- **Engineers** who want to draft a UI shape before committing to a stack.
+
+## What it is not
+
+- **Not a production UI framework.** Mockups are intentionally
+  approximate. Do not ship them.
+- **Not a replacement for Figma.** There is no pixel-perfect control,
+  no design system tokens, no auto-layout in the design-tool sense.
+- **Not a code generator.** The markup is for mockups; output is not
+  meant to be lifted into a real application.
+
+## How it fits together
+
+1. **The language** — a small declarative DSL for composing components.
+2. **The component library** — primitives (buttons, layouts, inputs)
+   that the language references.
+3. **Flow** — screens connected by actions, with version history.
+4. **AI assist** — prompt-driven generation of mockup markup.
+5. **Integrations** — the VS Code plugin extends the surface (today
+   it is also where the visual flow diff lives).
+
+If you want to feel it out before reading further, jump to the
+[Quickstart](/guides/quickstart/).

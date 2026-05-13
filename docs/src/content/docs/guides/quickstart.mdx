@@ -1,0 +1,46 @@
+---
+title: Quickstart
+description: Build your first OpenMockup screen in two minutes.
+---
+
+The fastest way to feel out OpenMockup is in the browser. No install,
+no project setup.
+
+## 1. Open the playground
+
+Head to the [Live Editor](/playground/) (placeholder route during the
+docs migration — wires up to the existing playground app shortly).
+You will see a split view: markup on the left, rendered mockup on the right.
+
+## 2. Try a minimal screen
+
+Paste this into the editor:
+
+```jsx
+<Card>
+  <Heading>Welcome back</Heading>
+  <Paragraph>Sign in to continue to the dashboard.</Paragraph>
+  <Form>
+    <Field label="Email" />
+    <Field label="Password" type="password" />
+    <Button variant="primary">Sign in</Button>
+  </Form>
+</Card>
+```
+
+You should see a card with a heading, a two-field form, and a button.
+That is the full loop: write declarative markup, see a mockup.
+
+## 3. Add a second screen and link them
+
+Switch to the **Flow Editor**. Add a second screen for the post-login
+dashboard. On the first screen, set the **Sign in** button's `action`
+to navigate to that second screen. Click through the flow in preview
+to walk the prototype.
+
+## What's next
+
+- Browse the [Cookbook](/cookbook/dashboard-header/) for ready-made
+  patterns.
+- Read about [Flow versioning and visual diff](/guides/flow-versions-and-diff/)
+  when you start iterating on a prototype.
