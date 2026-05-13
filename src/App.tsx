@@ -13,6 +13,7 @@ import { PlaygroundPage } from "./pages/PlaygroundPage.js";
 import { TextPage } from "./pages/TextPage.js";
 import { CookbookPage } from "./pages/CookbookPage.js";
 import { LlmReferencePage } from "./pages/LlmReferencePage.js";
+import { DiffVersionsPage } from "./pages/DiffVersionsPage.js";
 
 export function App() {
   const [page, setPage] = useState("playground");
@@ -27,6 +28,8 @@ export function App() {
         return <CookbookPage />;
       case "llm-reference":
         return <LlmReferencePage />;
+      case "diff-versions":
+        return <DiffVersionsPage />;
 
       case "label":
       case "heading":

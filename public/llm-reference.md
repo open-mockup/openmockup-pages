@@ -41,6 +41,8 @@ string[]     →  tabs={["A", "B", "C"]}
 object[]     →  items={[{"key": "a", "label": "A"}]}
 ```
 
+Object array props use inline object literals. This is the preferred JSX form for segmented buttons and navigation items.
+
 ---
 
 ## Layout components
@@ -172,12 +174,19 @@ Children: `Button`, `LinkAction`, `IconButton`.
 
 Radio-style toggle as buttons.
 
+Use an `items` object array. Each item has a stable `key` and visible `label`; `activeKey` selects the current segment.
+
 ```jsx
 <SegmentedButton
   items={[{"key": "list", "label": "List"}, {"key": "grid", "label": "Grid"}]}
   activeKey="list"
 />
 ```
+
+| Prop | Type | Description |
+|---|---|---|
+| `items` | `{ key: string; label: string }[]` | Segment options |
+| `activeKey` | string | Selected item key |
 
 ---
 
@@ -283,6 +292,24 @@ Rows: cells separated by ` / `, rows separated by `\n`.
 ```jsx
 <Tabs tabs={["All", "Active", "Closed"]} active={0} />
 ```
+
+Flow-aware tabs use keyed object items. `key` identifies the tab, `label` is visible text, `action` is the flow action emitted on click, and `activeKey` selects the active tab. VS Code preview is currently the first renderer that implements the click behavior.
+
+```jsx
+<Tabs
+  activeKey="strategy"
+  tabs={[
+    { key: "overview", label: "Обзор", action: "open-overview" },
+    { key: "strategy", label: "Стратегия", action: "open-strategy" }
+  ]}
+/>
+```
+
+| Prop | Type | Description |
+|---|---|---|
+| `tabs` | `string[] \| { key; label; action? }[]` | Tab labels or keyed tab items |
+| `active` | number | Legacy active tab index for string[] tabs |
+| `activeKey` | string | Active tab key for keyed tab items |
 
 ### TopNav
 
@@ -579,6 +606,40 @@ Omit `actions` to skip validation for that page.
 ```
 
 **IntelliJ / WebStorm**: Settings → Editor → File Types → JSX → add `*.omx`.
+
+---
+
+## Diff-based versions
+
+Markdown may describe two versions of one mockup in a single `openmockup` code block. This is useful for PR review, analyst handoff, and LLM tasks that need to explain what changed.
+
+````markdown
+```openmockup
+<Page title="Close case">
+  <Modal title="Close case">
+<<<<< v1
+    <Button label="Save" variant="secondary" />
+=====
+    <Button label="Confirm" variant="primary" />
+>>>>> v2
+  </Modal>
+</Page>
+```
+````
+
+Markers:
+
+| Marker | Meaning |
+|---|---|
+| `<<<<< v1` | Start of the before version |
+| `=====` | Separator between before and after |
+| `>>>>> v2` | End of the after version |
+
+Supporting tools expand every marked chunk into two complete sources: `beforeSource` uses each `v1` chunk, and `afterSource` uses each `v2` chunk. The two expanded sources are parsed as ordinary Open Mockup JSX, then structural diff is rendered as `Diff`, `Before`, `After`, `Source`, and `Changes` tabs.
+
+Markers may wrap a whole `<Page>` or a local child/fragment inside a larger document. Prefer local chunks around the changed nodes when the surrounding structure is unchanged; use a full `<Page>` on both sides when the whole screen context changes. You may use multiple chunks in one block. Markers must be on their own lines, and the expanded `beforeSource` and `afterSource` must each be valid Open Mockup JSX. Prefer stable `id` props for repeated or movable nodes so structural diff can match them across versions.
+
+When explaining diff blocks, report semantic user-facing changes first, then implementation details.
 
 ---
 

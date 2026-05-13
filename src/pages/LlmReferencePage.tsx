@@ -144,6 +144,10 @@ false        →  required={false}      (explicit when needed)
 string[]     →  tabs={["A", "B", "C"]}
 object[]     →  items={[{"key": "a", "label": "A"}]}`}
       />
+      <P>
+        Object array props use inline object literals. This is the preferred JSX
+        form for segmented buttons and navigation items.
+      </P>
 
       <Divider my="xl" />
 
@@ -273,12 +277,24 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       />
 
       <H3>SegmentedButton</H3>
+      <P>
+        Segmented buttons use an <code>items</code> object array. Each item has a
+        stable <code>key</code> and visible <code>label</code>;{" "}
+        <code>activeKey</code> selects the current segment.
+      </P>
       <Code
         lang="jsx"
         code={`<SegmentedButton
   items={[{"key": "list", "label": "List"}, {"key": "grid", "label": "Grid"}]}
   activeKey="list"
 />`}
+      />
+      <PropTable
+        rows={[
+          ["Prop", "Type", "Description"],
+          ["items", '{ key: string; label: string }[]', "Segment options"],
+          ["activeKey", "string", "Selected item key"],
+        ]}
       />
 
       <Divider my="xl" />
@@ -383,6 +399,31 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       <Code
         lang="jsx"
         code={`<Tabs tabs={["All", "Active", "Closed"]} active={0} />`}
+      />
+      <P>
+        Flow-aware tabs use keyed object items. <code>key</code> identifies the
+        tab, <code>label</code> is visible text, <code>action</code> is the flow
+        action emitted on click, and <code>activeKey</code> selects the active
+        tab. VS Code preview is currently the first renderer that implements
+        the click behavior.
+      </P>
+      <Code
+        lang="jsx"
+        code={`<Tabs
+  activeKey="strategy"
+  tabs={[
+    { key: "overview", label: "Обзор", action: "open-overview" },
+    { key: "strategy", label: "Стратегия", action: "open-strategy" }
+  ]}
+/>`}
+      />
+      <PropTable
+        rows={[
+          ["Prop", "Type", "Description"],
+          ["tabs", "string[] | { key; label; action? }[]", "Tab labels or keyed tab items"],
+          ["active", "number", "Legacy active tab index for string[] tabs"],
+          ["activeKey", "string", "Active tab key for keyed tab items"],
+        ]}
       />
 
       <H3>TopNav</H3>
@@ -709,6 +750,45 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       <P>
         <strong>IntelliJ / WebStorm</strong>: Settings → Editor → File Types →
         JSX → add <code>*.omx</code>.
+      </P>
+
+      <Divider my="xl" />
+
+      {/* ── Diff versions ────────────────────────────────────────── */}
+      <H2>Diff-based versions</H2>
+      <P>
+        Markdown may describe two versions of one mockup in a single{" "}
+        <code>openmockup</code> code block. This is useful for PR review,
+        analyst handoff, and LLM tasks that need to explain what changed.
+      </P>
+      <Code
+        lang="markdown"
+        code={`\`\`\`openmockup
+<Page title="Close case">
+  <Modal title="Close case">
+<<<<< v1
+    <Button label="Save" variant="secondary" />
+=====
+    <Button label="Confirm" variant="primary" />
+>>>>> v2
+  </Modal>
+</Page>
+\`\`\``}
+      />
+      <P>
+        The markers are <code>&lt;&lt;&lt;&lt;&lt; v1</code>,{" "}
+        <code>=====</code>, and <code>&gt;&gt;&gt;&gt;&gt; v2</code>. Supporting
+        tools expand every marked chunk into two complete sources, parse those
+        sources as ordinary Open Mockup JSX, then render <code>Diff</code>,{" "}
+        <code>Before</code>, <code>After</code>, <code>Source</code>, and{" "}
+        <code>Changes</code> tabs.
+      </P>
+      <P>
+        The markers may wrap a whole <code>&lt;Page&gt;</code> or a local
+        child/fragment inside a larger document. Prefer local chunks around the
+        changed nodes when the surrounding structure is unchanged. You may use
+        multiple chunks in one block. Markers must be on their own lines, and
+        the expanded before/after sources must each be valid Open Mockup JSX.
       </P>
 
       <Divider my="xl" />

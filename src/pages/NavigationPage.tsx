@@ -23,8 +23,23 @@ import {
 const importCode = `import { tabs, breadcrumb, pagination, sidebarNav, topNav, menu, contextMenu, navItem, menuItem } from "@openmockup/dsl";`;
 
 const tabsProps: PropRow[] = [
-  { name: "tabs",   type: "[TextValue, ...]", required: true, description: "Tab labels (at least one)." },
-  { name: "active", type: "number",           required: true, description: "Zero-based index of the initially active tab." },
+  {
+    name: "tabs",
+    type: "[TextValue, ...] | [{ key, label, action? }, ...]",
+    required: true,
+    description:
+      "Tab labels, or keyed tab items. Keyed items can include action, a flow action emitted when the tab is clicked.",
+  },
+  {
+    name: "active",
+    type: "number",
+    description: "Legacy zero-based index of the initially active tab.",
+  },
+  {
+    name: "activeKey",
+    type: "string",
+    description: "Key of the active tab when tabs uses keyed items.",
+  },
 ];
 
 const breadcrumbProps: PropRow[] = [
@@ -82,6 +97,21 @@ export function NavigationPage() {
       <div>
         <Title order={2} mb="lg">Tabs</Title>
         <DemoBlock title="Basic tabs" doc={tabsBasic} code={tabsBasicCode} />
+        <Text mt="lg" mb="xs">
+          Flow-aware tabs use keyed object items. <code>action</code> is the
+          flow action emitted when the tab is clicked; VS Code preview is the
+          first renderer that implements the behavior.
+        </Text>
+        <CodeHighlight
+          code={`<Tabs
+  activeKey="strategy"
+  tabs={[
+    { key: "overview", label: "Обзор", action: "open-overview" },
+    { key: "strategy", label: "Стратегия", action: "open-strategy" }
+  ]}
+/>`}
+          language="jsx"
+        />
         <Title order={3} mt="lg" mb="sm">Tabs props</Title>
         <PropsTable rows={tabsProps} />
       </div>

@@ -58,8 +58,19 @@ const iconButtonProps: PropRow[] = [
 ];
 
 const segmentedButtonProps: PropRow[] = [
-  { name: "items", type: "[SegmentedButtonOption, ...]", required: true, description: "Segment options with key + label." },
-  { name: "activeKey", type: "string", required: true, description: "Currently selected segment key." },
+  {
+    name: "items",
+    type: "[SegmentedButtonOption, ...]",
+    required: true,
+    description:
+      'Segment options with key + label. In JSX, pass an object array: items={[{"key": "list", "label": "List"}]}.',
+  },
+  {
+    name: "activeKey",
+    type: "string",
+    required: true,
+    description: "Currently selected segment key.",
+  },
 ];
 
 export function ButtonPage() {

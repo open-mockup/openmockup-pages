@@ -1,6 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import postcssPresetMantine from "postcss-preset-mantine";
+import { resolve } from "node:path";
+
+const flowResolveStubPath = resolve("src/stubs/flow-resolve-stub.ts");
 
 // @openmockup/flow 0.1.6 re-exports a Node.js-only resolver module from its
 // public index. Intercept it in the load hook (after path resolution) so the
@@ -8,8 +11,28 @@ import postcssPresetMantine from "postcss-preset-mantine";
 const flowResolveStub = {
   name: "stub-flow-resolver",
   enforce: "pre" as const,
+  resolveId(source: string, importer?: string) {
+    if (
+      source.includes("@openmockup")
+      && source.includes("flow")
+      && /\/dist\/resolve\.[jt]s(?:\?|$)/.test(source)
+    ) {
+      return flowResolveStubPath;
+    }
+    if (
+      source === "./resolve.js"
+      && importer?.includes("@openmockup")
+      && importer.includes("flow")
+      && /\/dist\/index\.[jt]s(?:\?|$)/.test(importer)
+    ) {
+      return flowResolveStubPath;
+    }
+  },
   load(id: string) {
-    if (id.includes("@openmockup") && id.includes("flow") && /\/dist\/resolve\.[jt]s$/.test(id)) {
+    if (
+      id === flowResolveStubPath
+      || (id.includes("@openmockup") && id.includes("flow") && /\/dist\/resolve\.[jt]s(?:\?|$)/.test(id))
+    ) {
       return "export const resolveFlow = undefined; export const RegistryResolver = undefined; export const FileSystemResolver = undefined; export const CompositeResolver = undefined;";
     }
   },
