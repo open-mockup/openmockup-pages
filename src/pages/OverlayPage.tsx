@@ -17,11 +17,13 @@ const importCode = `import { modal, drawer, popover } from "@openmockup/dsl";`;
 
 const modalProps: PropRow[] = [
   { name: "title",   type: "TextValue",  required: true, description: "Modal header text." },
+  { name: "open",    type: "boolean",    required: false, description: "Render an open overlay snapshot when true; hide it when false; omit for the flat wireframe block." },
   { name: "content", type: "LayoutNode", required: true, description: "Body content (single node)." },
 ];
 
 const drawerProps: PropRow[] = [
   { name: "side",    type: '"left" | "right"', required: true, description: "Which edge the drawer slides in from." },
+  { name: "open",    type: "boolean",          required: false, description: "Render an open drawer snapshot when true; hide it when false; omit for the flat wireframe block." },
   { name: "content", type: "LayoutNode",       required: true, description: "Drawer body content." },
 ];
 
@@ -37,13 +39,14 @@ export function OverlayPage() {
         <Title order={1} mb="xs">Overlays</Title>
         <Text c="dimmed" size="lg">
           Overlay nodes — <code>modal</code>, <code>drawer</code>, and <code>popover</code>.
-          In wireframe mode they render as dashed panels to indicate their position in the layout.
+          Without <code>open</code> they render as dashed panels to indicate their position in the layout.
+          Use <code>open</code> for a static snapshot of an already-open overlay.
         </Text>
       </div>
 
       <Alert icon={<IconInfoCircle size={16} />} color="blue" variant="light">
-        Overlays are static in the wireframe renderer. Trigger logic (open/close) is implemented
-        by the host application using action refs.
+        Use <code>open</code> for one-screen state snapshots. Use Flow transitions when the document
+        needs click-through open/close behavior.
       </Alert>
 
       <Divider />

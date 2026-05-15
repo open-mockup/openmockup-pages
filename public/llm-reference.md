@@ -414,7 +414,7 @@ Flow-aware tabs use keyed object items. `key` identifies the tab, `label` is vis
 
 ## Overlay components
 
-Overlays render as labelled flat blocks in wireframes, not as floating layers.
+Overlays without `open` render as labelled flat blocks in wireframes. Add `open` when the mockup is a snapshot of the open modal/drawer state; use `open={false}` to model the closed state.
 
 ### Modal
 
@@ -426,6 +426,10 @@ Overlays render as labelled flat blocks in wireframes, not as floating layers.
     <Button label="Cancel" variant="secondary" />
   </ActionBar>
 </Modal>
+
+<Modal title="Create calculation" open>
+  <Form>…</Form>
+</Modal>
 ```
 
 ### Drawer
@@ -434,9 +438,14 @@ Overlays render as labelled flat blocks in wireframes, not as floating layers.
 <Drawer side="right">
   <Form>…</Form>
 </Drawer>
+
+<Drawer side="right" open>
+  <Form>…</Form>
+</Drawer>
 ```
 
 `side`: `"left"` `"right"` `"top"` `"bottom"`
+`open`: boolean, optional. `true` renders the overlay open, `false` hides it, omitted keeps the flat wireframe block.
 
 ### Popover
 
@@ -486,28 +495,23 @@ For project-specific widgets with no matching core node. Never invent new core e
 <Flow initial="contact">
 
   <!-- external files -->
-  <Page id="contact"    src="./contact.omx" />
-  <Page id="shipping"   src="./shipping.omx" />
-  <Page id="help-modal" src="./help-modal.omx" />
-
-  <!-- inline page (small auxiliary screens) -->
-  <Page id="done">
-    <Heading>Order placed!</Heading>
-  </Page>
-
-  <!-- transitions scoped to each page -->
-  <Page id="contact">
+  <Page id="contact" src="./contact.omx">
     <Go on="submit" to="shipping" />
     <Go on="help"   to="help-modal" modal />
   </Page>
 
-  <Page id="shipping">
+  <Page id="shipping" src="./shipping.omx">
     <Go on="submit" to="done" />
     <Go on="back"   back />
   </Page>
 
-  <Page id="help-modal">
+  <Page id="help-modal" src="./help-modal.omx">
     <Go on="close" closeModal />
+  </Page>
+
+  <!-- inline page (small auxiliary screens) -->
+  <Page id="done">
+    <Heading>Order placed!</Heading>
   </Page>
 
   <!-- global: fires from any page -->
@@ -538,7 +542,11 @@ For project-specific widgets with no matching core node. Never invent new core e
 `<Go>` inside `<Page id="x">` is scoped to that page.  
 `<Go>` at the `<Flow>` level is global — fires from any active page.
 
+Declare each page id once in a flow. A `<Page id="x" />` is an external page reference resolved by `src`, same-document `name="x"`, or the host registry. A `<Page id="x">` with only `<Go>` children is still an external page reference plus scoped transitions. A page becomes inline only when it has non-`Go` children.
+
 ### Page resolution order
+
+For external page references, including `<Page id="x" />` or `<Page id="x">` with only `<Go>` children:
 
 ```
 1. src="./path.omx"              → explicit file
@@ -722,25 +730,21 @@ When explaining diff blocks, report semantic user-facing changes first, then imp
 **`checkout.flow.omx`**
 ```jsx
 <Flow initial="contact">
-  <Page id="contact"    src="./contact.omx" />
-  <Page id="shipping"   src="./shipping.omx" />
-  <Page id="help-modal" src="./help-modal.omx" />
-
-  <Page id="done">
-    <Heading>Order placed!</Heading>
-  </Page>
-
-  <Page id="contact">
+  <Page id="contact" src="./contact.omx">
     <Go on="submit" to="shipping" />
   </Page>
 
-  <Page id="shipping">
+  <Page id="shipping" src="./shipping.omx">
     <Go on="submit" to="done" />
     <Go on="back"   back />
   </Page>
 
-  <Page id="help-modal">
+  <Page id="help-modal" src="./help-modal.omx">
     <Go on="close" closeModal />
+  </Page>
+
+  <Page id="done">
+    <Heading>Order placed!</Heading>
   </Page>
 
   <Go on="help" to="help-modal" modal />
@@ -802,6 +806,7 @@ Follow these when producing `.openmockup` or `.omx` files:
 2. Use `CustomComponent` for unknown widgets — never invent new core element names.
 3. `Split` requires exactly two children.
 4. `boolean true` props use shorthand: `required`, not `required={true}`.
-5. `action` refs on `<Button action="…">` use `verb-object` style: `save-order`, `open-filter`, `row-edit`.
-6. Table cell separator: ` / ` (space-slash-space). Row separator: `\n`.
-7. Run `openmockup path/to/file.openmockup` to validate output.
+5. Use `<Modal open>` or `<Drawer open>` for static snapshots of an already-open overlay. Use `<Flow>` + `<Go modal>` when the document needs click-through behavior.
+6. `action` refs on `<Button action="…">` use `verb-object` style: `save-order`, `open-filter`, `row-edit`.
+7. Table cell separator: ` / ` (space-slash-space). Row separator: `\n`.
+8. Run `openmockup path/to/file.openmockup` to validate output.

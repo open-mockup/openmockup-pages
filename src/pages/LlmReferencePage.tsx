@@ -533,8 +533,10 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       {/* ── Overlays ─────────────────────────────────────────────── */}
       <H2>Overlay components</H2>
       <P>
-        Overlays render as labelled flat blocks in wireframes, not as floating
-        layers.
+        Overlays without <code>open</code> render as labelled flat blocks in
+        wireframes. Add <code>open</code> when the mockup is a snapshot of the
+        open modal/drawer state; use <code>open={"{false}"}</code> to model the
+        closed state.
       </P>
 
       <H3>Modal</H3>
@@ -546,6 +548,10 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
     <Button label="Delete" variant="danger" />
     <Button label="Cancel" variant="secondary" />
   </ActionBar>
+</Modal>
+
+<Modal title="Create calculation" open>
+  <Form>…</Form>
 </Modal>`}
       />
 
@@ -554,11 +560,19 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
         lang="jsx"
         code={`<Drawer side="right">
   <Form>…</Form>
+</Drawer>
+
+<Drawer side="right" open>
+  <Form>…</Form>
 </Drawer>`}
       />
       <P>
         <code>side</code>: <code>"left"</code> <code>"right"</code>{" "}
         <code>"top"</code> <code>"bottom"</code>
+        <br />
+        <code>open</code>: optional boolean. <code>true</code> renders the
+        overlay open, <code>false</code> hides it, omitted keeps the flat
+        wireframe block.
       </P>
 
       <H3>Popover</H3>
@@ -617,28 +631,23 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
         code={`<Flow initial="contact">
 
   <!-- external files -->
-  <Page id="contact"    src="./contact.omx" />
-  <Page id="shipping"   src="./shipping.omx" />
-  <Page id="help-modal" src="./help-modal.omx" />
-
-  <!-- inline page (small auxiliary screens) -->
-  <Page id="done">
-    <Heading>Order placed!</Heading>
-  </Page>
-
-  <!-- transitions scoped to each page -->
-  <Page id="contact">
+  <Page id="contact" src="./contact.omx">
     <Go on="submit" to="shipping" />
     <Go on="help"   to="help-modal" modal />
   </Page>
 
-  <Page id="shipping">
+  <Page id="shipping" src="./shipping.omx">
     <Go on="submit" to="done" />
     <Go on="back"   back />
   </Page>
 
-  <Page id="help-modal">
+  <Page id="help-modal" src="./help-modal.omx">
     <Go on="close" closeModal />
+  </Page>
+
+  <!-- inline page (small auxiliary screens) -->
+  <Page id="done">
+    <Heading>Order placed!</Heading>
   </Page>
 
   <!-- global: fires from any page -->
@@ -672,8 +681,23 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
         scoped to that page. <code>&lt;Go&gt;</code> at the{" "}
         <code>&lt;Flow&gt;</code> level is global — fires from any active page.
       </P>
+      <P>
+        Declare each page id once in a flow. A{" "}
+        <code>{"<Page id=\"x\" />"}</code> is an external page reference
+        resolved by <code>src</code>, same-document <code>name="x"</code>, or
+        the host registry. A <code>{"<Page id=\"x\">"}</code> with only{" "}
+        <code>&lt;Go&gt;</code> children is still an external page reference
+        plus scoped transitions. A page becomes inline only when it has
+        non-<code>&lt;Go&gt;</code> children.
+      </P>
 
       <H3>Page resolution order</H3>
+      <P>
+        For external page references, including{" "}
+        <code>{"<Page id=\"x\" />"}</code> or{" "}
+        <code>{"<Page id=\"x\">"}</code> with only <code>&lt;Go&gt;</code>{" "}
+        children:
+      </P>
       <Code
         lang="text"
         code={`1. src="./path.omx"              → explicit file
@@ -877,25 +901,21 @@ object[]     →  items={[{"key": "a", "label": "A"}]}`}
       <Code
         lang="jsx"
         code={`<Flow initial="contact">
-  <Page id="contact"    src="./contact.omx" />
-  <Page id="shipping"   src="./shipping.omx" />
-  <Page id="help-modal" src="./help-modal.omx" />
-
-  <Page id="done">
-    <Heading>Order placed!</Heading>
-  </Page>
-
-  <Page id="contact">
+  <Page id="contact" src="./contact.omx">
     <Go on="submit" to="shipping" />
   </Page>
 
-  <Page id="shipping">
+  <Page id="shipping" src="./shipping.omx">
     <Go on="submit" to="done" />
     <Go on="back"   back />
   </Page>
 
-  <Page id="help-modal">
+  <Page id="help-modal" src="./help-modal.omx">
     <Go on="close" closeModal />
+  </Page>
+
+  <Page id="done">
+    <Heading>Order placed!</Heading>
   </Page>
 
   <Go on="help" to="help-modal" modal />
@@ -970,6 +990,12 @@ const element = render(doc, mantineRenderer); // React.ReactElement`}
         <List.Item>
           <code>boolean true</code> props use shorthand: <code>required</code>,
           not <code>required={"{true}"}</code>.
+        </List.Item>
+        <List.Item>
+          Use <code>{"<Modal open>"}</code> or <code>{"<Drawer open>"}</code>{" "}
+          for static snapshots of an already-open overlay. Use Flow with{" "}
+          <code>{"<Go modal>"}</code> when the document needs click-through
+          behavior.
         </List.Item>
         <List.Item>
           <code>action</code> refs on{" "}
